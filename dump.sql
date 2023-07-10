@@ -21,55 +21,40 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: movies_review; Type: TABLE; Schema: public; Owner: -
+-- Name: _prisma_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.movies_review (
-    id integer NOT NULL,
-    movie_id integer NOT NULL,
-    stars integer NOT NULL,
-    comments text NOT NULL
+CREATE TABLE public._prisma_migrations (
+    id character varying(36) NOT NULL,
+    checksum character varying(64) NOT NULL,
+    finished_at timestamp with time zone,
+    migration_name character varying(255) NOT NULL,
+    logs text,
+    rolled_back_at timestamp with time zone,
+    started_at timestamp with time zone DEFAULT now() NOT NULL,
+    applied_steps_count integer DEFAULT 0 NOT NULL
 );
 
 
 --
--- Name: moveis_review_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: items; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.moveis_review_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: moveis_review_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.moveis_review_id_seq OWNED BY public.movies_review.id;
-
-
---
--- Name: wishlist_movies; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.wishlist_movies (
+CREATE TABLE public.items (
     id integer NOT NULL,
     name text NOT NULL,
-    streaming text NOT NULL,
+    type_id integer NOT NULL,
+    streaming_id integer NOT NULL,
     genre text NOT NULL,
     status boolean DEFAULT false NOT NULL
 );
 
 
 --
--- Name: wishlist_movies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: items_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.wishlist_movies_id_seq
+CREATE SEQUENCE public.items_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -79,77 +64,276 @@ CREATE SEQUENCE public.wishlist_movies_id_seq
 
 
 --
--- Name: wishlist_movies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.wishlist_movies_id_seq OWNED BY public.wishlist_movies.id;
-
-
---
--- Name: movies_review id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.movies_review ALTER COLUMN id SET DEFAULT nextval('public.moveis_review_id_seq'::regclass);
+ALTER SEQUENCE public.items_id_seq OWNED BY public.items.id;
 
 
 --
--- Name: wishlist_movies id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: reviews; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.wishlist_movies ALTER COLUMN id SET DEFAULT nextval('public.wishlist_movies_id_seq'::regclass);
-
-
---
--- Data for Name: movies_review; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.movies_review VALUES (1, 2, 5, 'Belo filme, emocionante! Vale a pena assistir de novo!');
+CREATE TABLE public.reviews (
+    id integer NOT NULL,
+    item_id integer NOT NULL,
+    stars integer NOT NULL,
+    comments text NOT NULL
+);
 
 
 --
--- Data for Name: wishlist_movies; Type: TABLE DATA; Schema: public; Owner: -
+-- Name: reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-INSERT INTO public.wishlist_movies VALUES (1, 'A última música', 'netflix', 'drama', true);
-INSERT INTO public.wishlist_movies VALUES (2, 'A vida e morte de charlie', 'netflix', 'drama', true);
-
-
---
--- Name: moveis_review_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.moveis_review_id_seq', 1, true);
+CREATE SEQUENCE public.reviews_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
--- Name: wishlist_movies_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.wishlist_movies_id_seq', 3, true);
-
-
---
--- Name: movies_review moveis_review_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.movies_review
-    ADD CONSTRAINT moveis_review_pkey PRIMARY KEY (id);
+ALTER SEQUENCE public.reviews_id_seq OWNED BY public.reviews.id;
 
 
 --
--- Name: wishlist_movies wishlist_movies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: streaming; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.wishlist_movies
-    ADD CONSTRAINT wishlist_movies_pkey PRIMARY KEY (id);
+CREATE TABLE public.streaming (
+    id integer NOT NULL,
+    name text NOT NULL
+);
 
 
 --
--- Name: movies_review moveis_review_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: streaming_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.movies_review
-    ADD CONSTRAINT moveis_review_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.wishlist_movies(id);
+CREATE SEQUENCE public.streaming_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: streaming_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.streaming_id_seq OWNED BY public.streaming.id;
+
+
+--
+-- Name: type; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.type (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+--
+-- Name: type_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.type_id_seq OWNED BY public.type.id;
+
+
+--
+-- Name: items id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items ALTER COLUMN id SET DEFAULT nextval('public.items_id_seq'::regclass);
+
+
+--
+-- Name: reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.reviews_id_seq'::regclass);
+
+
+--
+-- Name: streaming id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.streaming ALTER COLUMN id SET DEFAULT nextval('public.streaming_id_seq'::regclass);
+
+
+--
+-- Name: type id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.type ALTER COLUMN id SET DEFAULT nextval('public.type_id_seq'::regclass);
+
+
+--
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public._prisma_migrations VALUES ('6a711441-d688-466e-9893-aac6d593f820', 'a510cc304a11453ae2c2bfa07e79967074551c854901068ef425218b666a1eac', '2023-07-10 14:42:10.336448-03', '20230710174210_first_migration', NULL, NULL, '2023-07-10 14:42:10.238992-03', 1);
+INSERT INTO public._prisma_migrations VALUES ('db3a55a0-a0ac-42ab-a4c8-08f895310d98', '368c3f02947139c6a4e4059f9a6a1e682f9e1703c13b459a5a7e0ce4508fb75d', '2023-07-10 15:14:27.967154-03', '20230710181427_type_name_unique', NULL, NULL, '2023-07-10 15:14:27.940491-03', 1);
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.items VALUES (1, 'Mistério em Paris', 1, 1, 'Comedy', true);
+INSERT INTO public.items VALUES (2, 'Gossip Girl', 2, 1, 'drama', true);
+INSERT INTO public.items VALUES (3, 'A Ultima Musica', 1, 2, 'Drama', false);
+
+
+--
+-- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.reviews VALUES (3, 2, 5, 'Série Incrivel!');
+
+
+--
+-- Data for Name: streaming; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.streaming VALUES (1, 'NetFlix');
+INSERT INTO public.streaming VALUES (2, 'PrimeVideo');
+
+
+--
+-- Data for Name: type; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO public.type VALUES (1, 'Movie');
+INSERT INTO public.type VALUES (2, 'Serie');
+
+
+--
+-- Name: items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.items_id_seq', 4, true);
+
+
+--
+-- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.reviews_id_seq', 4, true);
+
+
+--
+-- Name: streaming_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.streaming_id_seq', 2, true);
+
+
+--
+-- Name: type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.type_id_seq', 2, true);
+
+
+--
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public._prisma_migrations
+    ADD CONSTRAINT _prisma_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: items items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: streaming streaming_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.streaming
+    ADD CONSTRAINT streaming_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: type type_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.type
+    ADD CONSTRAINT type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: streaming_name_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX streaming_name_key ON public.streaming USING btree (name);
+
+
+--
+-- Name: type_name_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX type_name_key ON public.type USING btree (name);
+
+
+--
+-- Name: items items_streaming_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT items_streaming_id_fkey FOREIGN KEY (streaming_id) REFERENCES public.streaming(id);
+
+
+--
+-- Name: items items_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT items_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.type(id);
+
+
+--
+-- Name: reviews reviews_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
 
 
 --
