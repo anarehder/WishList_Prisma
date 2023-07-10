@@ -1,7 +1,7 @@
 import prisma from "@/database/database.connection";
-import { CreateItem} from "@/protocols";
+import { CreateItem, Item, Review} from "@/protocols";
 
-export async function getItemsDB() {
+export async function getItemsDB(): Promise<Item[]> {
     return prisma.items.findMany({
         include: {
             reviews: true
@@ -26,7 +26,7 @@ export async function changeStatus(id: number) {
     });
 }
 
-export async function getMovieByName(newMovie: CreateItem) {
+export async function getMovieByName(newMovie: CreateItem): Promise <Item> {
     return prisma.items.findFirst({
         where: {
             name: {
@@ -37,26 +37,26 @@ export async function getMovieByName(newMovie: CreateItem) {
     })
 }
 
-export async function getItemByIdDB(id: number) {
+export async function getItemByIdDB(id: number): Promise<Item> {
     return prisma.items.findFirst({
         where: {id}
     })
 }
 
-export async function insertItemDB(newMovie: CreateItem) {
+export async function insertItemDB(newMovie: CreateItem): Promise<Item> {
     return prisma.items.create({
         data: newMovie
     })
 }
 
-export async function editItemDB(editedMovie: CreateItem, id: number) {
+export async function editItemDB(editedMovie: CreateItem, id: number): Promise<Item> {
     return prisma.items.update({
         data: editedMovie,
         where: {id}
     })
 }
 
-export async function deleteItemsDB(id: number) {
+export async function deleteItemsDB(id: number): Promise<Item> {
     return prisma.items.delete({
         where: {id}
     })

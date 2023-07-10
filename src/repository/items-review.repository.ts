@@ -1,11 +1,11 @@
 import prisma from "@/database/database.connection";
 import { EditReview, Review } from "@/protocols";
 
-export async function getItemsReviewDB() {
+export async function getItemsReviewDB(): Promise<Review[]> {
     return prisma.reviews.findMany();
 }
 
-export async function getItemReviewByIdDB(id: number) {
+export async function getItemReviewByIdDB(id: number): Promise<Review> {
     return prisma.reviews.findFirst({
         where: {id}
     })
